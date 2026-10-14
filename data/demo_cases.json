@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Healthy machine",
+    "note": "Should produce no fault",
+    "type": "L",
+    "air": 301.0,
+    "proc": 310.9,
+    "rpm": 1473,
+    "torque": 44.2,
+    "wear": 116,
+    "label": "none"
+  },
+  {
+    "name": "Overheating",
+    "note": "Heat dissipation failure",
+    "type": "L",
+    "air": 303.5,
+    "proc": 312.0,
+    "rpm": 1366,
+    "torque": 54.5,
+    "wear": 30,
+    "label": "HDF"
+  },
+  {
+    "name": "Power problem",
+    "note": "Power failure",
+    "type": "M",
+    "air": 300.6,
+    "proc": 309.4,
+    "rpm": 1367,
+    "torque": 63.2,
+    "wear": 45,
+    "label": "PWF"
+  },
+  {
+    "name": "Two faults at once",
+    "note": "Two faults compete",
+    "type": "M",
+    "air": 302.6,
+    "proc": 312.3,
+    "rpm": 1454,
+    "torque": 54.8,
+    "wear": 253,
+    "label": "TWF|OSF"
+  },
+  {
+    "name": "Missing information",
+    "note": "Air temperature sensor is missing: engine should ask for it",
+    "type": "M",
+    "air": null,
+    "proc": 311.6,
+    "rpm": 1227,
+    "torque": 68.2,
+    "wear": 187,
+    "label": "OSF"
+  }
+]

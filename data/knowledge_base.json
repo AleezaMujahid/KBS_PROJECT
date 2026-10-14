@@ -1,0 +1,30 @@
+{
+  "symptoms": [
+    {"id": "low_temp_diff",  "label": "Process-air temperature difference is low (< 8.6 K)", "type": "sensor"},
+    {"id": "low_speed",      "label": "Rotational speed is low (< 1380 rpm)",               "type": "sensor"},
+    {"id": "low_power",      "label": "Mechanical power is too low (< 3500 W)",             "type": "sensor"},
+    {"id": "high_power",     "label": "Mechanical power is too high (> 9000 W)",            "type": "sensor"},
+    {"id": "high_strain",    "label": "Tool wear x torque exceeds the limit for this product type", "type": "sensor"},
+    {"id": "high_tool_wear", "label": "Tool wear is high (>= 200 min)",                     "type": "sensor"}
+  ],
+  "faults": [
+    {"id": "HDF", "label": "Heat dissipation failure", "component": "cooling system",
+     "causes": ["insufficient cooling", "low airflow at low speed"],
+     "actions": ["inspect_cooling", "reduce_load"], "safety_critical": true},
+    {"id": "PWF", "label": "Power failure", "component": "drive / spindle motor",
+     "causes": ["power outside operating range", "drive fault"],
+     "actions": ["check_drive", "reduce_load"], "safety_critical": true},
+    {"id": "OSF", "label": "Overstrain failure", "component": "cutting tool / spindle",
+     "causes": ["worn tool under high torque", "overload"],
+     "actions": ["reduce_load", "replace_tool"], "safety_critical": true},
+    {"id": "TWF", "label": "Tool wear failure", "component": "cutting tool",
+     "causes": ["tool reached end of life"],
+     "actions": ["replace_tool"], "safety_critical": false}
+  ],
+  "actions": [
+    {"id": "inspect_cooling", "label": "Inspect and clean the cooling system", "cost": 1, "downtime_hrs": 1, "safety_benefit": 4, "production_impact": 2},
+    {"id": "check_drive",     "label": "Check the drive and power supply",     "cost": 2, "downtime_hrs": 2, "safety_benefit": 4, "production_impact": 3},
+    {"id": "reduce_load",     "label": "Reduce load / spindle speed",          "cost": 1, "downtime_hrs": 0, "safety_benefit": 3, "production_impact": 2},
+    {"id": "replace_tool",    "label": "Replace the cutting tool",             "cost": 2, "downtime_hrs": 1, "safety_benefit": 4, "production_impact": 3}
+  ]
+}

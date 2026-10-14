@@ -1,0 +1,14 @@
+[
+  {"id": "R1", "if": ["low_temp_diff", "low_speed"], "then": "HDF", "cf": 0.95,
+   "source": "AI4I 2020 dataset documentation (UCI): HDF when temp. difference < 8.6 K and speed < 1380 rpm"},
+  {"id": "R2", "if": ["low_temp_diff"], "then": "HDF", "cf": 0.16,
+   "source": "Weak partial evidence; confidence = precision measured on the AI4I data (115 of 720 rows)"},
+  {"id": "R3", "if": ["low_power"], "then": "PWF", "cf": 0.95,
+   "source": "AI4I 2020 dataset documentation (UCI): PWF when power < 3500 W"},
+  {"id": "R4", "if": ["high_power"], "then": "PWF", "cf": 0.95,
+   "source": "AI4I 2020 dataset documentation (UCI): PWF when power > 9000 W"},
+  {"id": "R5", "if": ["high_strain"], "then": "OSF", "cf": 0.95,
+   "source": "AI4I 2020 dataset documentation (UCI): OSF when tool wear x torque > 11000/12000/13000 minNm for L/M/H"},
+  {"id": "R6", "if": ["high_tool_wear"], "then": "TWF", "cf": 0.06,
+   "source": "AI4I 2020 documentation: TWF in the 200-240 min wear window; confidence = precision measured on the data (45 of 801 rows)"}
+]
