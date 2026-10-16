@@ -1,0 +1,11 @@
+Faulty cases : 45
+  top-1 accuracy: 45/45 = 100.0%
+  top-3 accuracy: 45/45 = 100.0%
+Healthy cases: 15
+  false alarms (fault conf >= 0.5): 0/15
+Per fault (top-1 hits / cases containing that fault):
+  HDF: 12/12
+  OSF: 11/14
+  PWF: 12/13
+  TWF: 10/11
+Details saved to data/evaluation_results.csv
