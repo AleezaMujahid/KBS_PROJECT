@@ -1,9 +1,9 @@
-"""Streamlit app: Industrial Fault Diagnosis KBS (CT-359). Owner: Person C.
+"""Streamlit app: Industrial Fault Diagnosis.
 
 Run from the project root:   streamlit run app.py
 
-Flow:  sensor values -> symptoms (Person A's preprocess.py)
-       -> inference engine (Person B)  -> ranked faults, actions, explanation
+Flow:  sensor values -> symptoms 
+       -> inference engine -> ranked faults, actions, explanation
        -> follow-up questions (Yes/No) re-run the diagnosis
 """
 import os

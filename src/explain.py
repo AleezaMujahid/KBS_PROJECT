@@ -1,5 +1,4 @@
-"""Plain-language explanation of a diagnosis.  Owner: Person B."""
-
+"""Diagnosis and recommendation explanation."""
 
 def explain_diagnosis(diag, engine):
     lines = []
@@ -42,9 +41,8 @@ def explain_recommendations(recs, stakeholder):
         lines.append(f"  {i}. {r['label']}  - because of {why}{tag}")
     return "\n".join(lines)
 
-
+# return symptom, rule, and fault connections for the graph
 def graph_edges(diag):
-    """For Person C's pyvis graph: (symptom, rule_id, fault) links."""
     edges = []
     for res in diag["results"]:
         for r in res["rules"]:

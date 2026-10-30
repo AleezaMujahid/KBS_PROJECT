@@ -1,5 +1,6 @@
-"""Person A's checks. Run from the project root:  python tests/test_person_a.py
-Every check prints PASS or stops with a clear message."""
+"""Tests for data preprocessing and knowledge base validation.
+Run from the project root using: python tests/test_person_a.py"""
+
 import json
 import sys
 sys.path.insert(0, ".")
@@ -9,13 +10,13 @@ from src.preprocess import load_data, row_to_symptoms
 MODES = ["TWF", "HDF", "PWF", "OSF"]
 ok = lambda msg: print("PASS ", msg)
 
-# 1. data loads cleanly ---------------------------------------------------
+# checks dataset loading
 df = load_data("data/ai4i2020.csv")
 assert len(df) == 10000, f"expected 10000 rows, got {len(df)}"
 assert df.isna().sum().sum() == 0, "dataset has missing values"
 ok("dataset: 10000 rows, no missing values")
 
-# 2. thresholds reproduce the labels exactly ------------------------------
+# check symptom thresholds against dataset labels
 sym = df.apply(row_to_symptoms, axis=1)
 has = lambda name: sym.apply(lambda s: name in s)
 hdf = has("low_temp_diff") & has("low_speed")
@@ -28,7 +29,7 @@ wear = has("high_tool_wear")
 assert (df[df["TWF"] == 1]["wear"] >= 198).all()
 ok(f"TWF: high_tool_wear fires on {int(wear.sum())} rows, {int((wear & (df.TWF==1)).sum())} are real failures (weak evidence, as expected)")
 
-# 3. knowledge base is self-consistent ------------------------------------
+# validate knowledge base references
 kb = json.load(open("data/knowledge_base.json"))
 rules = json.load(open("data/rules.json"))
 sym_ids = {s["id"] for s in kb["symptoms"]}
@@ -50,7 +51,7 @@ ids = [r["id"] for r in rules]
 assert len(ids) == len(set(ids)), "duplicate rule ids"
 ok(f"knowledge base: {len(sym_ids)} symptoms, {len(fault_ids)} faults, {len(action_ids)} actions, {len(rules)} rules, all references valid")
 
-# 4. test_cases.csv is well formed and labelled from the data -------------
+# validate test cases
 tc = pd.read_csv("data/test_cases.csv").fillna("")
 assert len(tc) >= 60, "too few test cases"
 assert tc["case_id"].is_unique
@@ -61,13 +62,13 @@ for _, c in tc.iterrows():
         assert f == "none" or f in fault_ids, f'{c["case_id"]}: unknown fault {f}'
 ok(f"test_cases.csv: {len(tc)} cases, all symptoms and faults valid")
 
-# 5. quick sanity run of the rules (a simple stand-in for Person B's engine)
+# run a basic rule-based diagnosis check
 def diagnose(symptoms):
     result = {}
     for r in rules:
         if set(r["if"]) <= symptoms:
             old = result.get(r["then"], 0.0)
-            result[r["then"]] = old + r["cf"] * (1 - old)     # combine confidences
+            result[r["then"]] = old + r["cf"] * (1 - old)     
     return result
 
 hits = total = 0

@@ -1,9 +1,5 @@
-"""Logic behind the Streamlit app, kept out of app.py so it can be tested.
-Owner: Person C.
+"""Helper functions for the Streamlit interface."""
 
-Everything here is plain Python (no Streamlit), so tests/test_person_c.py can
-run it without a browser.
-"""
 import json
 
 import pandas as pd
@@ -34,13 +30,8 @@ def load_demo_cases(path="data/demo_cases.json"):
     with open(path) as f:
         return json.load(f)
 
-
+# process machine readings and follow-up answers to generate a diagnosis and recommendations
 def run_with_answers(reading, answers, engine, stakeholder):
-    """Whole app logic in one call.
-    reading : dict(type, air, proc, rpm, torque, wear); None = sensor missing
-    answers : {symptom: True/False} from the follow-up Yes/No questions
-    Returns dict: base_facts, base_unknown, missing, facts, unknown,
-                  diagnosis, recommendations."""
     base_facts, base_unknown, missing = reading_to_facts(reading)
     facts, unknown = dict(base_facts), set(base_unknown)
     for sym, present in answers.items():
@@ -57,7 +48,6 @@ def _fmt(x, fmt):
 
 
 def symptom_table(reading, base_facts, base_unknown, answers, engine):
-    """Rows for the 'sensor values -> symptoms' table shown on screen."""
     d = add_derived(pd.DataFrame([{k: (float("nan") if v is None else v)
                                    for k, v in reading.items()}])).iloc[0]
     T = THRESHOLDS
