@@ -1,4 +1,5 @@
-"""One call from raw sensor values to everything Person C needs.  Owner: Person B."""
+"""Process machine readings and generate diagnosis results."""
+
 import numpy as np
 import pandas as pd
 from src.preprocess import add_derived, row_to_symptoms
@@ -6,7 +7,7 @@ from src.inference_engine import Engine
 from src.ranking import recommend
 from src.explain import explain_diagnosis, explain_recommendations
 
-# if a sensor is missing, these symptoms become 'unknown' (we can ask about them)
+# if sensor is missing, symptoms become unknown
 SENSOR_SYMPTOMS = {
     "air": ["low_temp_diff"], "proc": ["low_temp_diff"],
     "rpm": ["low_speed", "low_power", "high_power"],
@@ -15,10 +16,8 @@ SENSOR_SYMPTOMS = {
     "type": ["high_strain"],
 }
 
-
+# convert machine readings into facts and identify missing sensors
 def reading_to_facts(reading):
-    """reading = dict(type, air, proc, rpm, torque, wear); None = sensor missing.
-    Returns facts, unknown symptoms, missing sensor names."""
     r = {k: (np.nan if v is None else v) for k, v in reading.items()}
     missing = [k for k in SENSOR_SYMPTOMS if pd.isna(r.get(k, np.nan))]
     row = add_derived(pd.DataFrame([r])).iloc[0]

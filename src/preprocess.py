@@ -1,26 +1,22 @@
-"""Sensor readings -> symptoms.  Owner: Person A.
+"""Convert machine sensor readings into symptoms."""
 
-Every threshold lives in THRESHOLDS so it can be changed in one place and
-cited in the report. Source: AI4I 2020 dataset documentation (UCI).
-"""
 import numpy as np
 import pandas as pd
 
 THRESHOLDS = {
-    "low_temp_diff_K": 8.6,          # process - air temperature below this
-    "low_speed_rpm": 1380,           # rotational speed below this
-    "low_power_W": 3500,             # power below this
-    "high_power_W": 9000,            # power above this
-    "high_wear_min": 200,            # tool wear at or above this
-    "strain_limit": {"L": 11000, "M": 12000, "H": 13000},  # wear*torque by type
+    "low_temp_diff_K": 8.6,          
+    "low_speed_rpm": 1380,         
+    "low_power_W": 3500,            
+    "high_power_W": 9000,          
+    "high_wear_min": 200,           
+    "strain_limit": {"L": 11000, "M": 12000, "H": 13000},  
 }
 
 COLUMNS = ["udi", "pid", "type", "air", "proc", "rpm", "torque", "wear",
            "fail", "TWF", "HDF", "PWF", "OSF", "RNF"]
 
-
+# load dataset and add derived columns
 def load_data(path="data/ai4i2020.csv"):
-    """Load the CSV, give columns short names, add derived columns."""
     df = pd.read_csv(path)
     df.columns = COLUMNS
     return add_derived(df)
@@ -33,10 +29,8 @@ def add_derived(df):
     df["strain"] = df["wear"] * df["torque"]                 # min*Nm
     return df
 
-
+# convert machine readings into symptom certainty values
 def row_to_symptoms(row):
-    """One machine reading -> dict {symptom_id: certainty}. Missing sensors
-    simply produce no symptom (the engine can then ask for them)."""
     t = THRESHOLDS
     s = {}
     if pd.notna(row.get("dT")):

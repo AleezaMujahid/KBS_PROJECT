@@ -1,11 +1,6 @@
-"""Rank maintenance actions for a stakeholder.  Owner: Person B.
+"""Rank maintenance actions for a stakeholder."""
 
-Every action in knowledge_base.json has: cost (1-5), downtime_hrs,
-safety_benefit (1-5), production_impact (1-5).
-Good = high safety_benefit. Bad = high cost, long downtime, high production impact.
-So each 'bad' value is flipped before weighting (score 1 = best, 0 = worst)."""
-
-PRESETS = {   # weights add up to 1
+PRESETS = {   
     "safety_officer":       {"safety": 0.60, "downtime": 0.10, "cost": 0.10, "production": 0.20},
     "maintenance_engineer": {"safety": 0.25, "downtime": 0.30, "cost": 0.30, "production": 0.15},
     "plant_manager":        {"safety": 0.20, "downtime": 0.20, "cost": 0.20, "production": 0.40},
@@ -23,9 +18,8 @@ def action_score(action, weights, max_downtime):
             + weights["cost"] * cost + weights["production"] * prod)
 
 
+# recommended actions for stakeholders
 def recommend(diagnosis, kb, stakeholder="safety_officer"):
-    """Returns a ranked list of actions. Each: id, label, score (preset score),
-    priority (score x fault confidence), faults (why), override (bool)."""
     weights = PRESETS[stakeholder]
     actions = {a["id"]: a for a in kb["actions"]}
     faults = {f["id"]: f for f in kb["faults"]}
@@ -49,8 +43,6 @@ def recommend(diagnosis, kb, stakeholder="safety_officer"):
             item["override"] = item["override"] or critical
 
     ranked = list(found.values())
-    # safety override: actions for sure, safety-critical faults go first,
-    # most safety benefit first, whatever the stakeholder preset says
     ranked.sort(key=lambda x: (not x["override"],
                                -x["safety_benefit"] if x["override"] else 0,
                                -x["priority"]))
