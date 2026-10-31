@@ -1,6 +1,5 @@
-"""Build data/test_cases.csv and data/demo_cases.json from the AI4I data.
-Run from the project root:  python scripts/build_test_cases.py
-Expected faults come from the LABEL columns, never from our rules."""
+"""Build test cases and demo cases from the AI4I dataset."""
+
 import json
 import sys
 sys.path.insert(0, ".")
@@ -14,12 +13,12 @@ df = load_data("data/ai4i2020.csv")
 n_modes = df[MODES + ["RNF"]].sum(axis=1)
 
 parts = []
-for m in MODES:                                   # 10 clean cases per fault
+for m in MODES:                                 
     pool = df[(n_modes == 1) & (df[m] == 1)]
     parts.append(pool.sample(10, random_state=SEED))
-multi = df[(n_modes > 1) & (df["RNF"] == 0)]      # 5 cases with two faults at once
+multi = df[(n_modes > 1) & (df["RNF"] == 0)]     
 parts.append(multi.sample(5, random_state=SEED))
-healthy = df[df["fail"] == 0]                     # 15 healthy machines
+healthy = df[df["fail"] == 0]                     
 parts.append(healthy.sample(15, random_state=SEED))
 cases = pd.concat(parts)
 
@@ -41,7 +40,7 @@ out.to_csv("data/test_cases.csv", index=False)
 print("test_cases.csv:", len(out), "rows")
 print(out["expected_fault"].value_counts().to_string())
 
-# ---- 5 demo cases for Person C (raw sensor values) ----
+# demo cases using sensor readings
 def pick(mask, label, note, seed=SEED):
     r = df[mask].sample(1, random_state=seed).iloc[0]
     return {"name": label, "note": note, "type": r["type"], "air": r["air"],
