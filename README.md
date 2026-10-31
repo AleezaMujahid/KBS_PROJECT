@@ -1,72 +1,186 @@
-# Industrial Fault Diagnosis: Knowledge-Based System (CT-359)
+# 🏭 Industrial Fault Diagnosis – Knowledge-Based System
 
-A rule-based expert system (not a trained ML model) that diagnoses faults in an
-industrial machine tool (milling / CNC type) from sensor readings and recommends
-maintenance actions ranked for different stakeholders.
+**Course:** CT-359 – Knowledge-Based Systems  
+**Project Type:** Rule-Based Expert System  
+**Interface:** Streamlit  
+**Dataset:** AI4I 2020 Predictive Maintenance Dataset
 
-Data basis: the UCI **AI4I 2020 Predictive Maintenance** dataset (10,000 records,
-5 failure modes). Note: AI4I is *synthetic*, built to resemble real industrial data.
+## 📌 Project Overview
 
-## Quick start
+Industrial Fault Diagnosis is a Knowledge-Based System (KBS) designed to identify potential faults in industrial machines using sensor readings.
+
+The system uses a predefined knowledge base, IF–THEN rules, forward chaining, backward chaining, and certainty factors to diagnose faults and recommend appropriate maintenance actions.
+
+Unlike Machine Learning systems, it relies on expert knowledge and logical reasoning rather than training a predictive model.
+
+## 🎯 Objectives
+
+- Identify potential industrial machine faults.
+- Represent expert knowledge using facts and IF–THEN rules.
+- Apply forward and backward chaining.
+- Calculate confidence values using certainty factors.
+- Generate maintenance recommendations.
+- Provide explainable diagnostic results.
+
+## 📊 Dataset
+
+The project uses the **AI4I 2020 Predictive Maintenance Dataset** from the UCI Machine Learning Repository.
+
+- 10,000 records.
+- Machine sensor readings.
+- Five failure modes.
+- Includes air temperature, process temperature, rotational speed, torque, and tool wear.
+
+**Dataset:** [UCI AI4I 2020 Predictive Maintenance](https://archive.ics.uci.edu/dataset/601/ai4i+2020+predictive+maintenance+dataset)
+
+## ⚙️ Technologies Used
+
+- Python
+- Streamlit
+- Pandas
+- JSON
+- PyVis
+- Pytest / Python unittest
+
+## 🧠 How It Works
+
+1. **Sensor Input:** Collects machine readings from the user.
+2. **Preprocessing:** Converts sensor values into symptoms using predefined thresholds.
+3. **Knowledge Base:** Stores machine faults, symptoms, and diagnostic rules.
+4. **Inference Engine:** Uses forward and backward chaining to derive possible faults.
+5. **Certainty Factors:** Calculates confidence values for diagnostic results.
+6. **Recommendation Engine:** Suggests and ranks maintenance actions.
+7. **Explanation:** Displays fired rules, supporting evidence, and reasoning graphs.
+
+## 🏗️ System Architecture
+
+The system follows a modular Knowledge-Based System architecture consisting of the following components:
+
+1. **User Interface:** Streamlit provides an interactive interface for entering sensor readings and viewing diagnostic results.
+
+2. **Preprocessing Module:** Processes raw sensor readings and converts them into meaningful symptoms using predefined thresholds.
+
+3. **Knowledge Base:** Stores machine-related facts, symptoms, fault descriptions, and IF–THEN diagnostic rules.
+
+4. **Inference Engine:** Applies forward chaining and backward chaining to identify possible machine faults based on available evidence.
+
+5. **Certainty Factor Module:** Calculates and combines confidence values to determine the strength of possible diagnoses.
+
+6. **Recommendation Engine:** Ranks maintenance recommendations according to stakeholder priorities and fault severity.
+
+7. **Explanation Module:** Explains the reasoning behind diagnoses by displaying activated rules, supporting symptoms, and reasoning graphs.
+
+## 🖥️ Key Features
+
+- Interactive Streamlit interface.
+- Manual sensor readings and sample machine scenarios.
+- Automatic symptom detection.
+- Follow-up questions for missing information.
+- Ranked fault diagnosis with confidence values.
+- Stakeholder-based maintenance recommendations.
+- Rule-based explanations and reasoning graphs.
+- What-if analysis using backward chaining.
+- Support for multiple fault scenarios.
+
+## 📁 Project Structure
+```text
+KBS_PROJECT/
+├── data/
+├── scripts/
+├── src/
+├── tests/
+│
+├── .gitignore
+├── app.py
+├── evaluation_output.txt
+├── README.md
+└── requirements.txt
+```
+
+## 🚀 Installation & Setup
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/AleezaMujahid/KBS_PROJECT.git
+cd KBS_PROJECT
+```
+
+### Step 2: Create a Virtual Environment
 
 ```bash
 python -m venv venv
-venv\Scripts\activate          # Windows   (Mac/Linux: source venv/bin/activate)
+```
+
+### Step 3: Activate the Virtual Environment
+
+For Windows PowerShell:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+For macOS/Linux:
+
+```bash
+source venv/bin/activate
+```
+
+### Step 4: Install Dependencies
+
+```bash
 pip install -r requirements.txt
-streamlit run app.py           # run from the project root
 ```
 
-## What the app does
+### Step 5: Run the Application
 
-| Step | What you see |
-|------|--------------|
-| 1. Sensor readings | Product type, air/process temperature, speed, torque, tool wear. Untick **sensor working** to simulate a missing sensor. |
-| 2. Sensor -> symptoms | Table showing derived values (temperature difference, power, strain), the threshold used and whether each symptom is present. |
-| 3. Follow-up questions | For symptoms the engine could not observe, it asks Yes/No. Each answer re-runs the diagnosis. |
-| 4. Results | Tabs: **Diagnosis** (ranked faults with confidence), **Recommended actions** (ranked per stakeholder, safety override), **Explanation** (which rules fired and why), **Reasoning graph** (pyvis: symptom -> rule -> fault), **What-if** (backward chaining: evidence still needed for a chosen fault). |
-
-Sidebar: choose the **stakeholder** (safety officer / maintenance engineer / plant manager)
-and **load a sample machine reading** (5 demo cases: healthy, overheating, power problem,
-two faults at once, missing air-temperature sensor).
-
-### Suggested demo order
-1. *Healthy machine*: no fault.
-2. *Overheating*: HDF with the full explanation and graph.
-3. Switch stakeholder on the same case and show the action ranking change.
-4. *Missing information*: answer the follow-up question and watch confidence update.
-5. *Two faults at once*: competing faults and the What-if tab.
-
-## Project structure
-
-```
-app.py                  Streamlit interface (Person C)
-src/ui_helpers.py       logic behind the app: tables, graph, re-run with answers (Person C)
-src/preprocess.py       sensor values -> symptoms, all thresholds in one table (Person A)
-src/inference_engine.py forward + backward chaining, certainty factors (Person B)
-src/ranking.py          stakeholder presets, safety override (Person B)
-src/explain.py          explanation text, graph edges (Person B)
-src/pipeline.py         raw reading -> facts/unknowns (Person B)
-data/                   knowledge_base.json, rules.json, test_cases.csv,
-                        demo_cases.json, ai4i2020.csv
-scripts/evaluate.py     top-1 / top-3 accuracy on the test cases
-tests/                  checks for Person A, B and C code
+```bash
+streamlit run app.py
 ```
 
-## Tests and evaluation
+The application will open in your default web browser.
+
+## 🧪 Testing & Evaluation
+
+Run individual component tests:
+
+**Knowledge Base and Preprocessing**
 
 ```bash
 python tests/test_person_a.py
+```
+
+**Inference Engine and Reasoning**
+
+```bash
 python tests/test_person_b.py
+```
+
+**Streamlit Interface**
+
+```bash
 python tests/test_person_c.py
+```
+
+**Run System Evaluation**
+
+```bash
 python scripts/evaluate.py
 ```
 
-## How the reasoning works (short)
+The evaluation measures diagnostic performance using Top-1 and Top-3 accuracy against labeled test cases.
 
-- **Forward chaining**: a rule fires when all its IF symptoms are present.
-  Rule strength = rule confidence x weakest matched evidence.
-- Two rules for the same fault combine as `cf1 + cf2 x (1 - cf1)`.
-- If two strong faults are close, both confidences are lowered (conflict).
-- **Backward chaining**: for a hypothesised fault, list which evidence is still needed.
-- **Ranking**: weighted score over safety, downtime, cost and production impact;
-  a safety-critical fault above the confidence limit triggers a safety override.
+## 📚 KBS Concepts
+
+- Knowledge Representation
+- Rule-Based Systems
+- Forward Chaining
+- Backward Chaining
+- Certainty Factors
+- Conflict Resolution
+- Explainable Reasoning
+- Decision Support Systems
+
+## 📌 Conclusion
+
+This project demonstrates how a rule-based Knowledge-Based System can use expert knowledge and logical reasoning to diagnose industrial machine faults and support maintenance decisions through an interactive and explainable interface.

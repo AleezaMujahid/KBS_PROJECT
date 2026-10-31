@@ -1,5 +1,6 @@
-"""Accuracy of the engine on data/test_cases.csv.  Owner: Person B.
+"""Accuracy of the engine on data/test_cases.csv.
 Run from the project root:  python scripts/evaluate.py"""
+
 import sys
 sys.path.insert(0, ".")
 import pandas as pd
